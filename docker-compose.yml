@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  api:
+    container_name: share-image-api
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "9000:3000"
+    volumes:
+      - .:/var/www/html
+    command: sh -c "yarn install && yarn run start:dev"
+    tty: true
+
+volumes:
+  node_modules:
