@@ -23,3 +23,11 @@ api:
 .PHONY: init
 init:
 	$(DC) up -d --build
+
+.PHONY: deploy
+deploy:
+	$(DC) exec api bash -c "yarn run build" && vercel
+
+.PHONY: deploy-prod
+deploy-prod:
+	$(DC) exec api bash -c "yarn run build" && vercel --prod
