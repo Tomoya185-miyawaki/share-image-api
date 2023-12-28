@@ -1,0 +1,4 @@
+export enum ConstantToken {
+  USERS_SERVICE = 'USERS_SERVICE',
+  USERS_REPOSITORY = 'USERS_REPOSITORY',
+}

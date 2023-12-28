@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './core/module/users.module';
 
 @Module({
   imports: [UsersModule],
