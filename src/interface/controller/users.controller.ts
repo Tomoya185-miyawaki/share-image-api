@@ -1,7 +1,7 @@
 import { Controller, Get, Inject } from '@nestjs/common';
-import { User } from '../../domain/models/interface/user.interface';
 import { IUsersService } from '../../usecases/interface/users.service.interface';
 import { ConstantToken } from '../../enum/constant.token';
+import { PublicUser } from '../../domain/models/interface/user.interface';
 
 @Controller('users')
 export class UsersController {
@@ -11,7 +11,11 @@ export class UsersController {
   ) {}
 
   @Get()
-  async users(): Promise<User[]> {
-    return await this.usersService.users();
+  async users(): Promise<PublicUser[]> {
+    const users = await this.usersService.users();
+    return users.map((user) => {
+      delete user.password;
+      return user;
+    });
   }
 }
