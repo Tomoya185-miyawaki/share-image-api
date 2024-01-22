@@ -1,22 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersController } from './users.controller';
-import { UsersService } from '../../usecases/users.service';
-import { User, PublicUser } from '../../domain/models/interface/user.interface';
-import { ConstantToken } from '../../enum/constant.token';
+import { UsersService } from './users.service';
+import { User } from '../domain/models/interface/user.interface';
+import { ConstantToken } from '../enum/constant.token';
+import { UsersRepository } from '../infrastructure/repository/users.repository';
 
-describe('UsersController', () => {
-  let controller: UsersController;
-  let fakeUsersService: Partial<UsersService>;
-  const expectUsersResponse: PublicUser[] = [
+describe('UsersService', () => {
+  let service: UsersService;
+  let fakeUsersRepository: Partial<UsersRepository>;
+  const expectUsersResponse: User[] = [
     {
       id: 1,
       name: 'test',
       email: 'sample@sample.com',
+      password: 'password',
     },
   ];
 
   beforeEach(async () => {
-    fakeUsersService = {
+    fakeUsersRepository = {
       users: () => {
         return Promise.resolve([
           {
@@ -30,24 +31,24 @@ describe('UsersController', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [UsersController],
       providers: [
+        UsersService,
         {
-          provide: ConstantToken.USERS_SERVICE,
-          useValue: fakeUsersService,
+          provide: ConstantToken.USERS_REPOSITORY,
+          useValue: fakeUsersRepository,
         },
       ],
     }).compile();
 
-    controller = module.get<UsersController>(UsersController);
+    service = module.get<UsersService>(UsersService);
   });
 
   it('Controllerが定義されているか', () => {
-    expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 
   it('すべてのユーザーを取得する', async () => {
-    const users = await controller.users();
+    const users = await service.users();
     expect(users.length).toEqual(1);
     expect(users).toEqual(expectUsersResponse);
   });
