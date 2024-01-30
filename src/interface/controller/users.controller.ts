@@ -1,7 +1,17 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Inject,
+  Post,
+  HttpCode,
+  Body,
+} from '@nestjs/common';
 import { IUsersService } from '../../usecases/interface/users.service.interface';
 import { ConstantToken } from '../../enum/constant.token';
 import { PublicUser } from '../../domain/models/interface/user.interface';
+import { SignInDto } from '../../interface/dto/user.dto';
+import { SignInResponseDto } from '../../interface/dto/user.response.dto';
 
 @Controller('users')
 export class UsersController {
@@ -17,5 +27,11 @@ export class UsersController {
       delete user.password;
       return user;
     });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  signIn(@Body() signInDto: SignInDto): Promise<SignInResponseDto> {
+    return this.usersService.signIn(signInDto.email, signInDto.password);
   }
 }

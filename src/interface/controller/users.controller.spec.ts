@@ -7,6 +7,7 @@ import { ConstantToken } from '../../enum/constant.token';
 describe('UsersController', () => {
   let controller: UsersController;
   let fakeUsersService: Partial<UsersService>;
+
   const expectUsersResponse: PublicUser[] = [
     {
       id: 1,
@@ -14,6 +15,10 @@ describe('UsersController', () => {
       email: 'sample@sample.com',
     },
   ];
+
+  const expectToken = {
+    access_token: 'test-access-token',
+  };
 
   beforeEach(async () => {
     fakeUsersService = {
@@ -26,6 +31,17 @@ describe('UsersController', () => {
             password: 'password',
           } as User,
         ]);
+      },
+      findUserByEmail: () => {
+        return Promise.resolve({
+          id: 1,
+          name: 'test',
+          email: 'sample@sample.com',
+          password: 'password',
+        } as User);
+      },
+      signIn: () => {
+        return Promise.resolve(expectToken);
       },
     };
 
@@ -50,5 +66,14 @@ describe('UsersController', () => {
     const users = await controller.users();
     expect(users.length).toEqual(1);
     expect(users).toEqual(expectUsersResponse);
+  });
+
+  it('ログイン成功後にアクセストークンが返ってくること', async () => {
+    const signInDto = {
+      email: 'sample@sample.com',
+      password: 'password',
+    };
+    const token = await controller.signIn(signInDto);
+    expect(token).toEqual(expectToken);
   });
 });
