@@ -3,7 +3,6 @@ import { UsersController } from './users.controller';
 import { UsersService } from '../../usecases/users.service';
 import { User, PublicUser } from '../../domain/models/interface/user.interface';
 import { ConstantToken } from '../../enum/constant.token';
-import { it } from 'node:test';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -16,6 +15,10 @@ describe('UsersController', () => {
       email: 'sample@sample.com',
     },
   ];
+
+  const expectToken = {
+    access_token: 'test-access-token',
+  };
 
   beforeEach(async () => {
     fakeUsersService = {
@@ -38,9 +41,7 @@ describe('UsersController', () => {
         } as User);
       },
       signIn: () => {
-        return Promise.resolve({
-          access_token: 'test-access-token',
-        });
+        return Promise.resolve(expectToken);
       },
     };
 
@@ -73,6 +74,6 @@ describe('UsersController', () => {
       password: 'password',
     };
     const token = await controller.signIn(signInDto);
-    console.log(token);
+    expect(token).toEqual(expectToken);
   });
 });
