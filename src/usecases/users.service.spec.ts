@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { User } from '../domain/models/interface/user.interface';
 import { ConstantToken } from '../enum/constant.token';
-import { JwtUserService } from '../usecases/jwt.user.service';
+import { JwtUserService } from './jwt.user.service';
 import { BadRequestException } from '@nestjs/common';
 
 describe('UsersService', () => {
